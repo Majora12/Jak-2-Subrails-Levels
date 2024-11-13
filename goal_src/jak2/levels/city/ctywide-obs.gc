@@ -390,6 +390,7 @@
                 (and (logtest? (game-feature pass-green) (-> *game-info* features)) (= 30 (-> self pass)))
                 (and (logtest? (game-feature pass-yellow) (-> *game-info* features)) (= 31 (-> self pass)))
                 (and (logtest? (game-feature pass-blue) (-> *game-info* features)) (= 32 (-> self pass)))
+                (logtest? (-> *target* focus-status) (focus-status pilot-riding)) ;; Custom Level, makes secuirty-walls act like comb-fields
                 )
         (go-virtual idle-open)
         (return #t)

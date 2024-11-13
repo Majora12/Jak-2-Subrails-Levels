@@ -307,12 +307,12 @@
         )
 
 (deftype helldog (hellcat)
-  ((current-level level  :offset-assert 1080)
+  ((current-level level  :offset-assert 1096) ;; increased for custom level 
    )
-  :heap-base #x3c0
-  :method-count-assert 166 ;; increased method count for custom level
-  :size-assert         #x43c
-  :flag-assert         #xa603c0043c ;; changed flag assert for custom level 
+  :heap-base #x500 ;; changed for custom levels
+  :method-count-assert 164 ;; increased method count for custom level
+  :size-assert         #x44c
+  :flag-assert         #xa40500044c ;; changed flag assert for custom level 
   )
 
 

@@ -4,6 +4,6 @@
 ;; the actual file name still needs to be 8.3
 ("FLV.DGO"
  (
-  "prison-obs.o"
+  ;; "prison-obs.o"
   "first-level.go"
   ))

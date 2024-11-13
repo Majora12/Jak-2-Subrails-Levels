@@ -66,6 +66,7 @@
   (player-grabbed 41)
   (nav-spheres 42)
   (idle-sound 43)
+  (overturned 44)
   )
 ;; ---rigid-body-object-flag
 
@@ -187,12 +188,14 @@
 (deftype rigid-body-control (basic)
   ((process  process)
    (state    rigid-body  :inline)
+   (force-callback   (function rigid-body-object float none))
    (matrix           matrix      :inline) ;; Custom Level
    (position         vector      :inline) ;; Custom Level
    (lin-velocity     vector      :inline) ;; Custom Level
    (ang-velocity     vector      :inline) ;; Custom Level
    (lin-momentum     vector      :inline) ;; Custom Level
    (ang-momentum     vector      :inline) ;; Custom Level
+   (inv-mass             float)
     (force            vector      :inline) ;; Custom Level
     (torque           vector      :inline) ;; custom level
    )
@@ -215,10 +218,6 @@
     (rigid-body-control-method-23 (_type_) none)
     (rigid-body-control-method-24 (_type_ rigid-body-info vector quaternion basic) none)
     (rigid-body-control-method-25 (_type_ vector quaternion) none)
-    (rigid-body-object-method-53 (_type_ float) none) ;; custom level
-      (rigid-body-control-method-360 (_type_ vector vector) none) ;; Custom Level
-      (rigid-body-control-method-361 (_type_ vector vector) none) ;; custom level
-      (add-force! (_type_ vector) none) ;; Custom Level
     )
   )
 
@@ -316,6 +315,7 @@
    (disturbed-time         time-frame)
    (player-force-position  vector                :inline)
    (player-force           vector                :inline)
+
    )
   (:state-methods
     idle
@@ -324,8 +324,6 @@
   (:methods
     (rigid-body-object-method-29 (_type_ float) none)
     (rigid-body-object-method-30 (_type_) none)
-    (rigid-body-object-method-53 (_type_ float) none) ;; custom level
-    (apply-gravity! (_type_ float) none) ;; For carb in custom level 
     (alloc-and-init-rigid-body-control (_type_ rigid-body-object-constants) none)
     (allocate-and-init-cshape (_type_) none)
     (init-skel-and-rigid-body (_type_) none)
@@ -348,6 +346,7 @@
     (rigid-body-object-method-50 (_type_ float) none)
     (rigid-body-object-method-51 (_type_) none)
     (rigid-body-object-method-52 (_type_) none)
+    (rbody-event-handler (_type_ process int symbol event-message-block) object)
     )
   )
 

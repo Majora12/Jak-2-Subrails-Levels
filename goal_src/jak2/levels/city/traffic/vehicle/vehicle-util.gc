@@ -173,6 +173,7 @@ This commonly includes things such as:
      )
     )
   (rigid-body-vehicle-constants-method-9 (-> this info))
+  (vehicle-method-363 this) ;; subrails custom level
   (none)
   )
 
@@ -960,10 +961,6 @@ This commonly includes things such as:
   (none)
   )
 
-  (defmethod vehicle-method-133 ((this vehicle) (arg0 traffic-object-spawn-params)) ;; custom level 
-  0
-  (none)
-  )
 
 (defmethod enable-bike-mode ((this vehicle))
   (when (not (logtest? (rigid-body-object-flag camera-bike-mode) (-> this flags)))
@@ -1254,7 +1251,23 @@ This commonly includes things such as:
   0
   (none)
   )
-
+;; Begin custom level method 
+(defmethod vehicle-method-363 ((this vehicle))
+  (let ((v1-1 (-> this root root-prim))
+        (f0-0 0.0)
+        )
+    (dotimes (a0-1 (the-as int (-> v1-1 specific 0)))
+      (let ((a1-3 (-> (the-as collide-shape-prim-group v1-1) child a0-1 local-sphere)))
+        (set! f0-0 (fmax f0-0 (+ (vector-length a1-3) (-> a1-3 w))))
+        )
+      )
+    (vector-reset! (-> v1-1 local-sphere))
+    (set! (-> v1-1 local-sphere w) f0-0)
+    )
+  0
+  (none)
+  )
+  ;; End Custom Level Method 
 (defmethod vehicle-method-129 ((this vehicle))
   (if (= this *debug-actor*)
       (format #t "hook-dead~%")

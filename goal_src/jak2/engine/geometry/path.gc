@@ -500,4 +500,7 @@ using the fractional component of `idx` as the interpolant, return this result
     f28-0
     )
   )
+  (defmethod path-control-method-26 ((this path-control) (arg0 vector))
+  (/ (path-control-method-25 this arg0) (the float (+ (-> this curve num-cverts) -1)))
+  )
 ;;custom level method ends

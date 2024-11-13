@@ -952,6 +952,7 @@
       (logclear! (-> this skel status) (joint-control-status sync-math))
       )
   (vehicle-method-96 this)
+   (vehicle-method-93 this) ;; custom level
   (let ((a1-0 (-> this rbody state position)))
     (set! (-> this flight-level) (get-height-at-point *traffic-height-map* a1-0))
     )
@@ -1193,7 +1194,7 @@
     )
   (cond
     ((logtest? (-> this rbody state flags) (rigid-body-flag enable-physics))
-     (vehicle-method-93 this)
+    
      (vehicle-method-106 this)
      (vehicle-method-121 this)
      )
@@ -1742,6 +1743,7 @@
   )
 
 (defmethod rigid-body-object-method-46 ((this vehicle) (arg0 process-drawable) (arg1 int) (arg2 symbol) (arg3 event-message-block))
+(local-vars (a0-19 object)) ;; custom level
   (when (and (= arg2 'touched) arg0 (logtest? (process-mask bit18) (-> arg0 mask)))
     (dotimes (s1-0 4)
       (let ((a1-2 (new 'stack-no-clear 'event-message-block)))
@@ -1855,6 +1857,13 @@
     (('nav-mesh-kill)
      (vehicle-method-142 this)
      )
+     ;; custom level methods begin
+     (('set-control-hook-ai)
+     (set! a0-19 (method-of-object this control-hook-ai))
+     (set! (-> this control-hook) (the-as (function vehicle vehicle-controls) a0-19))
+     a0-19
+     )
+     ;; ends
     (else
       ((method-of-type rigid-body-object rigid-body-object-method-46) this arg0 arg1 arg2 arg3)
       )

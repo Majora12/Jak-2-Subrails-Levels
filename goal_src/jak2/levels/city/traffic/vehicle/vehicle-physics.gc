@@ -120,7 +120,7 @@
    (friction-coef     float)
    (speed-factor      float)
    (probe-work-array  vehicle-probe-work  2 :inline)
-   (side-dir                vector                    :inline)
+   (side-dir                vector                    :inline) ;; custom level 
    )
   )
 
@@ -427,6 +427,7 @@
                 (vector-cross! (-> arg1 tmp) (-> arg1 p-body) (-> arg1 normal))
                 (vector-rotate*! (-> arg1 tmp) (-> arg1 tmp) (-> s3-0 state inv-i-world))
                 (vector-cross! (-> arg1 tmp) (-> arg1 tmp) (-> arg1 p-body))
+                ;(set! (-> arg1 p-body x) (vector-dot (-> arg1 mat trans) (-> arg1 steering-axis))) ;; custom levl, commented out for now 
                 (set! (-> arg1 vel-dot-norm) (vector-dot (-> arg1 velocity) (-> arg1 normal)))
                 (let ((f0-82 (fabs (-> arg1 vel-dot-norm))))
                   (set! (-> arg1 friction-coef)
@@ -811,9 +812,5 @@
 
 (defmethod vehicle-method-126 ((this vehicle) (arg0 float))
   (rigid-body-object-method-29 this arg0)
-  (none)
-  )
-  (defmethod apply-gravity ((this vehicle) (arg0 float))
-  (apply-gravity! this arg0)
   (none)
   )
