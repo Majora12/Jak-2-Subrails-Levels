@@ -306,6 +306,10 @@
 
 (build-custom-level "first-level")
 (custom-level-cgo "FLV.DGO" "first-level/firstlevel.gd")
+;; first level 2
+
+(build-custom-level "p-temple-1")
+(custom-level-cgo "PT1.DGO" "p-temple-1/ptemple1.gd")
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; ANIMATIONS

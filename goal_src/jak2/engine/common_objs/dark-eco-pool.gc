@@ -303,5 +303,16 @@
       (set! (-> gp-0 global-scale) (* 4096.0 (* 3.0 (+ 1.0 f0-9))))
       (set! (-> gp-0 individual-normal-scale) (+ 0.5 (* 0.5 f0-9)))
       )
+      ;; Make Dark Eco Pools kill Jak if he is anywhere within their defined volume
+      (dotimes (posvols (-> self vol pos-vol-count))
+      (let ((jak-pos (-> *target* control trans))
+            (padding 0.5)
+            (vol-plane (-> self vol pos-vol posvols)))
+            (if (point-in-vol? vol-plane jak-pos padding)
+            (send-event *target* 'attack #f (static-attack-info ((id (new-attack-id)) (mode 'dark-eco-pool))))
+          )
+        )
+      )
+            
     )
   )

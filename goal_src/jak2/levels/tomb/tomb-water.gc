@@ -81,6 +81,9 @@
           )
         )
       )
+        (logclear! (-> self mask) (process-mask sleep))
+  (logclear! (-> self mask) (process-mask sleep-code))
+  (transform-post)
     )
   :code sleep-code
   )
@@ -243,6 +246,9 @@ This commonly includes things such as:
     )
   :code sleep-code
   :post (behavior ()
+  (logclear! (-> self mask) (process-mask sleep))
+  (logclear! (-> self mask) (process-mask sleep-code))
+  (transform-post)
     0
     )
   )
@@ -943,7 +949,7 @@ This commonly includes things such as:
     )
   :code (behavior ()
     (let ((gp-0 (current-time)))
-      (until (time-elapsed? gp-0 (seconds 2))
+      (until (time-elapsed? gp-0 (seconds 5)) ;; Changed from 2 to allow all platforms to rise up before sequence starts
         (suspend)
         )
       )

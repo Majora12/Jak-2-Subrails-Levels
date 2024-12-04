@@ -49,6 +49,24 @@
                           (new 'static 'vector)
                           (new 'static 'vector)
                           (new 'static 'vector)
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
+                          ;; (new 'static 'vector) ;; custom level 
                           )
         )
 
@@ -242,7 +260,7 @@
 
 (define *dice-blocked-array* (new 'static 'boxed-array :type uint16 :length 0 :allocated-length 26))
 
-(define *dice-last-safe-position* (new 'static 'vector :x -2603417.5 :y 384983.03 :z -107683.84 :w 1.0))
+(define *dice-last-safe-position* (new 'static 'vector :x (meters 2868.69) :y (meters 236.38) :z (meters -2451.26) :w 1.0))
 
 (defpart 1491
   :init-specs ((:texture (new 'static 'texture-id :index #xbc :page #xc))
@@ -723,7 +741,7 @@
        (mem-set32! (the-as pointer *dice-blocked-array*) 13 0)
        (set! (-> *dice-blocked-array* 1) (the-as uint 256))
        (set! *dice-back-way-num* 0)
-       (set-vector! *dice-last-safe-position* -2603417.5 384983.03 -107683.84 1.0)
+       (set-vector! *dice-last-safe-position* 11750154.24 968212.48 -10040360.96 1.0)
        (if (and (= (-> self free-face) 5) (= (-> self active) 1))
            (set! (-> self active) (-> self first))
            )
@@ -1390,7 +1408,7 @@ This commonly includes things such as:
   (mem-set32! (the-as pointer *dice-blocked-array*) 13 0)
   (set! (-> *dice-blocked-array* 1) (the-as uint 256))
   (set! *dice-back-way-num* 0)
-  (set-vector! *dice-last-safe-position* -2603417.5 384983.03 -107683.84 1.0)
+  (set-vector! *dice-last-safe-position* 11750154.24 968212.48 -10040360.96 1.0)
   (set-vector! (-> this color) 0.5 0.5 0.5 1.0)
   (set! (-> this free-face) (the-as uint 6))
   (set! (-> this watervol) (entity-actor-lookup (-> this entity) 'alt-actor 0))
@@ -1496,7 +1514,7 @@ This commonly includes things such as:
   )
 
 (deftype mtn-plat-updown (base-plat)
-  ((sync      sync-eased  :inline)
+  ((sync      sync-linear  :inline)
    (path-pos  float)
    )
   (:state-methods
@@ -1600,10 +1618,15 @@ This commonly includes things such as:
         )
   (let ((a1-7 (new 'stack-no-clear 'sync-info-params)))
     (let ((v1-24 0))
-      (if (not (logtest? (-> this fact options) (actor-option loop)))
+      (if (not (logtest? (-> this fact options) (actor-option loop))) 
           (set! v1-24 (logior v1-24 1))
           )
-      (set! (-> a1-7 sync-type) 'sync-eased)
+      (set! (-> a1-7 sync-type) 'sync-linear)
+      (set! (-> a1-7 sync-flags) (the-as sync-flags v1-24))
+      (if (logtest? (-> this fact options) (actor-option loop))
+          (set! v1-24 (logior v1-24 2))
+          )
+      (set! (-> a1-7 sync-type) 'sync-linear)
       (set! (-> a1-7 sync-flags) (the-as sync-flags v1-24))
       )
     (set! (-> a1-7 period) (the-as uint 1800))
@@ -2100,6 +2123,9 @@ This commonly includes things such as:
       ((not *target*)
        )
       ((string= (-> *game-info* current-continue name) "mountain-aval")
+       (go-virtual fall)
+       )
+       ((string= (-> *game-info* current-continue name) "p-temple-1-start")
        (go-virtual fall)
        )
       )

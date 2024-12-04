@@ -9,6 +9,7 @@
   :type uint64
   :bitfield #t
   (pong 0)
+  (loop 1) ;; added for rotating platforms in custom levels
   )
 
 ;; DECOMP BEGINS

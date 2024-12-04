@@ -10,7 +10,7 @@
 (deftype plat (base-plat)
   ((path-pos  float)
    (sound-id  sound-id)
-   (sync      sync-eased  :inline)
+   (sync      sync-linear  :inline)
    )
   (:state-methods
     plat-idle
@@ -164,7 +164,11 @@ This commonly includes things such as:
       (if (not (logtest? (-> this fact options) (actor-option loop)))
           (set! v1-15 (logior v1-15 1))
           )
-      (set! (-> params sync-type) 'sync-eased)
+      (set! (-> params sync-type) 'sync-linear) ;; Changed for rotating platforms in custom levels
+      (set! (-> params sync-flags) (the-as sync-flags v1-15))
+      (if (logtest? (-> this fact options) (actor-option loop)) ;; Added for rotating platforms in custom levels
+      (set! v1-15 (logior v1-15 2)))
+      (set! (-> params sync-type) 'sync-linear)
       (set! (-> params sync-flags) (the-as sync-flags v1-15))
       )
     (set! (-> params period) (the-as uint 1200))

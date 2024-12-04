@@ -268,6 +268,134 @@
 
 ;; called from run-every-frame to ensure orb-placer is spawned/killed
 (define *orb-offset-tmp-vec* (new 'global 'vector))
+(defun debug-check-process-drawable-move ((proc process-drawable))
+  (let ((pad (-> *cpad-list* cpads 0))
+        (vec *orb-offset-tmp-vec*)
+        (proc-extra-vec (the vector #f)))
+    ;; update extra vectors for certain types
+    (cond
+      ((type-type? (-> proc type) money)
+        (set! proc-extra-vec (-> (the money proc) base))
+        )
+      ((type-type? (-> proc type) crate)
+        (set! proc-extra-vec (-> (the crate proc) base))
+        )
+        ;; ((type-type? (-> proc type) propa)
+        ;; (set! proc-extra-vec (-> (the propa proc) root trans))
+        ;;) 
+        ;; ((type-type? (-> proc type) tomb-door)
+        ;; (set! proc-extra-vec (-> (the tomb-door proc) root trans))
+        ;; )
+        ;; ((type-type? (-> proc type) dark-eco-pool)
+        ;; (set! proc-extra-vec (-> (the dark-eco-pool proc) root trans))
+        ;; )
+        ;;         ((type-type? (-> proc type) tomb-button)
+        ;; (set! proc-extra-vec (-> (the tomb-button proc) root trans))
+        ;; )
+        ;;          ((type-type? (-> proc type) tomb-simon-button)
+        ;; (set! proc-extra-vec (-> (the tomb-simon-button proc) root trans))
+        ;; )
+        ;;         ((type-type? (-> proc type) swingpole)
+        ;; (set! proc-extra-vec (-> (the swingpole proc) root trans))
+        ;; )
+        ;;         ((type-type? (-> proc type) mtn-dice)
+        ;; (set! proc-extra-vec (-> (the mtn-dice proc) root trans))
+        ;; )
+        ;;         ((type-type? (-> proc type) mtn-plat-updown)
+        ;; (set! proc-extra-vec (-> (the mtn-plat-updown proc) root trans))
+        ;; )
+        ;;          ((type-type? (-> proc type) warp-gate)
+        ;; (set! proc-extra-vec (-> (the warp-gate proc) root trans))
+        ;; )
+
+        
+      )
+
+    ;; X/Z based on camera
+    (when (nonzero? (-> pad stick0-speed))
+      (set! (-> vec x) (sin (-> pad stick0-dir)))
+      (set! (-> vec y) 0.0)
+      (set! (-> vec z) (cos (-> pad stick0-dir)))
+      (set! (-> vec w) 0.0)
+      ;; camera magic
+      (vector-matrix*! vec vec (matrix-local->world #t #f))
+      (vector-flatten! vec vec (-> *camera* local-down))
+      (vector-float*! vec vec (* (-> pad stick0-speed) 512.0))
+      
+      ;; actually move orb
+      (vector+! (-> proc root trans) (-> proc root trans) vec)
+      (when proc-extra-vec (vector+! proc-extra-vec proc-extra-vec vec))
+      )
+    
+    (cond
+      ;; fine tune/axis-aligned X/Z
+      ((cpad-pressed? 0 down)
+        (+! (-> proc root trans z) (meters 0.03))
+        (when proc-extra-vec (+! (-> proc-extra-vec z) (meters 0.03)))
+        )
+      ((cpad-pressed? 0 up)
+        (+! (-> proc root trans z) (meters -0.03))
+        (when proc-extra-vec (+! (-> proc-extra-vec z) (meters -0.03)))
+        )
+      ((cpad-pressed? 0 right)
+        (+! (-> proc root trans x) (meters 0.03))
+        (when proc-extra-vec (+! (-> proc-extra-vec x) (meters 0.03)))
+        )
+      ((cpad-pressed? 0 left)
+        (+! (-> proc root trans x) (meters -0.03))
+        (when proc-extra-vec (+! (-> proc-extra-vec x) (meters -0.03)))
+        )
+      ;; Y (up/down)
+      ((cpad-hold? 0 r2)
+        (+! (-> proc root trans y) (meters 0.08))
+        (when proc-extra-vec (+! (-> proc-extra-vec y) (meters 0.08)))
+        )
+      ((cpad-hold? 0 l2)
+        (+! (-> proc root trans y) (meters -0.08))
+        (when proc-extra-vec (+! (-> proc-extra-vec y) (meters -0.08)))
+        )
+      ((cpad-pressed? 0 r1)
+        (+! (-> proc root trans y) (meters 0.03))
+        (when proc-extra-vec (+! (-> proc-extra-vec y) (meters 0.03)))
+        )
+      ((cpad-pressed? 0 l1)
+        (+! (-> proc root trans y) (meters -0.03))
+        (when proc-extra-vec (+! (-> proc-extra-vec y) (meters -0.03)))
+        )
+      )
+
+    ;; rotation, just around Y axis
+    (let ((d 0))
+      (cond
+        ((cpad-pressed? 0 circle) (set! d -1))
+        ((cpad-pressed? 0 square) (set! d 1)))
+      (quaternion-rotate-z! (-> proc root quat) (-> proc root quat) (degrees d))
+      (cond
+        ((cpad-pressed? 0 x) (set! d -1))
+        ((cpad-pressed? 0 triangle) (set! d 1)))
+      (quaternion-rotate-x! (-> proc root quat) (-> proc root quat) (degrees d))
+      (cond
+        ((cpad-pressed? 1 x) (set! d -1))
+        ((cpad-pressed? 1 triangle) (set! d 1)))
+      (quaternion-rotate-y! (-> proc root quat) (-> proc root quat) (degrees d)))
+
+    ;; update entity too
+    (when (-> proc entity)
+      (if proc-extra-vec
+        (vector-copy! (-> (the entity-actor (-> proc entity)) extra trans) proc-extra-vec)
+        (vector-copy! (-> (the entity-actor (-> proc entity)) extra trans) (-> proc root trans)))
+      (quaternion-copy! (-> (the entity-actor (-> proc entity)) quat) (-> proc root quat))))
+
+  ;; un sleep 
+  (logclear! (-> proc mask) (process-mask sleep))
+  (logclear! (-> proc mask) (process-mask sleep-code))
+  ;; force update transforms
+  (when (type-type? (-> proc root type) collide-shape)
+    (update-transforms (the collide-shape (-> proc root)))
+    (update-transforms (the collide-shape-moving (-> proc root))))
+    
+  (none))
+  
 (defun orb-placer-maintenance ()
   (when *debug-segment*
     (orb-placer-list-maintenace #f)
@@ -324,9 +452,15 @@
                   (when (and (not *target*) (not (send-event *camera* 'query-state cam-fixed)))
                     (set-setting-by-param *setting-control* 'mode-name 'cam-fixed 0 0)
                     )
+                     (cond
+                      ;; prefer selected entity over orb placer selection
+                      ((and (-> *entity-debug-inspect* entity) (-> *entity-debug-inspect* entity extra process) (type-type? (-> *entity-debug-inspect* entity extra process type) process-drawable))
+                        ;; respond to controller input
+                        (debug-check-process-drawable-move (the process-drawable (-> *entity-debug-inspect* entity extra process)))
+                        )
 
                   ;; if we have an orb selected and the handle is nonzero...
-                  (when (and (>= *orb-placer-selected-idx* 0) (nonzero? (-> *orb-placer-orbs* *orb-placer-selected-idx*)))
+                   ((and (>= *orb-placer-selected-idx* 0) (nonzero? (-> *orb-placer-orbs* *orb-placer-selected-idx*)))
                     (let ((orb (the skill (handle->process (-> *orb-placer-orbs* *orb-placer-selected-idx*)))))
                       (when orb
                         ;; highlight it
@@ -389,7 +523,9 @@
                           )
                         )
                       )
-                    )
+                     )
+                     )
+                    
 
                   ;; Processes should suspend themselves, the loop will resume next frame
                   (suspend)

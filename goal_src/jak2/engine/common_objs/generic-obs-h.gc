@@ -147,7 +147,7 @@
    (joint-track  int32)
    (speed        meters)
    (dir          vector         :inline)
-   (sync         sync-eased     :inline)
+   (sync         sync-linear     :inline) ;; Changed for rotating platforms in custom levels
    )
   (:state-methods
     idle

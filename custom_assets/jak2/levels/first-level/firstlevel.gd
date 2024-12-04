@@ -5,5 +5,6 @@
 ("FLV.DGO"
  (
   ;; "prison-obs.o"
+  "warp-gate-ag.go"
   "first-level.go"
   ))

@@ -489,6 +489,19 @@
         (set! (-> this wait-for) (the-as pair (car (cdr (cdr s5-0)))))
         (set! (-> this on-close) (the-as pair (car (cdr (cdr (cdr s5-0))))))
         )
+      ((case-str (-> this name)
+        (("temple-warp-gate-1")
+          (set! (-> this continue) (get-continue-by-name *game-info* "Rail-Warp"))
+          (set! (-> this on-activate) '())
+          (set! (-> this wait-for) '())
+          (set! (-> this on-close) '())
+        )
+        (("first-warp-gate-1")
+        (set! (-> this continue) (get-continue-by-name *game-info* "p-temple-1-start"))
+          (set! (-> this on-activate) '())
+          (set! (-> this wait-for) '())
+          (set! (-> this on-close) '())
+          )))
       (else
         (set! (-> this continue) #f)
         )
@@ -528,6 +541,8 @@
     (remove-setting! 'allow-progress)
     (set-time! (-> self state-time))
     (update-transforms (-> self root))
+    (if (the warp-gate (process-by-ename "temple-warp-gate-1"))
+      (set-vector! (-> self root scale) 8.0 8.0 8.0 1.0))
     (until #f
       (handle-notice self)
       (when (and (and *target*

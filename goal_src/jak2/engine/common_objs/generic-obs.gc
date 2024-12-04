@@ -284,8 +284,14 @@ This commonly includes things such as:
       (if (not (logtest? (the-as int a0-19) 8))
           (set! v1-22 (logior v1-22 1))
           )
-      (set! (-> s4-1 sync-type) 'sync-eased)
+      (set! (-> s4-1 sync-type) 'sync-linear) ;; Changed for rotating platforms in custom levels
       (set! (-> s4-1 sync-flags) (the-as sync-flags v1-22))
+      (if (logtest? (the-as int a0-19) 8) ;; Added for rotating platforms in custom levels
+          (set! v1-22 (logior v1-22 2))
+          )
+      (set! (-> s4-1 sync-type) 'sync-linear) 
+      (set! (-> s4-1 sync-flags) (the-as sync-flags v1-22))
+
       )
     (set! (-> s4-1 period) (the-as uint 0))
     (set! (-> s4-1 entity) arg0)

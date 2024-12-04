@@ -7,7 +7,7 @@
 
 (defenum actor-option
   :bitfield #t
-  :type uint64
+  :type uint32 ;; Changed for rotating platforms in custom levels
 
   (blocked           0) ;; 1
   (spawns-fuel-cell  1) ;; 2
@@ -39,7 +39,7 @@
   (no-distance-check-fadeout 26) ;; 1024
   (no-track                  27) ;; hi 2048
   )
-
+ 
 (defenum enemy-option
   :bitfield #t
   :type uint32

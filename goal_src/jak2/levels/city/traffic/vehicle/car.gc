@@ -389,7 +389,7 @@
       :attack-force-scale 1.0
       )
     :name '*carb-constants*
-    :flags #x4009
+    :flags #x68
     :object-type (traffic-type carb)
     :guard-type #x7
     :max-engine-thrust (meters 50) ;; custom level
@@ -556,7 +556,7 @@
       )
     :lift-thruster-count 2
     :roll-thruster-count 2
-    :steering-thruster-count 2
+    ;:steering-thruster-count 2
     :stabilizer-count 4
     :inv-lift-thruster-count 0.25
     :lift-thruster-array (new 'static 'inline-array vehicle-control-point 2
@@ -579,16 +579,16 @@
         :normal (new 'static 'vector :x -0.3 :y -0.6 :w 1.0)
         )
       )
-    :steering-thruster-array (new 'static 'inline-array vehicle-control-point 2
-      (new 'static 'vehicle-control-point
-        :local-pos (new 'static 'vector  :w 1.0)
-        :normal (new 'static 'vector :x 1.0 :w 1.0)
-        )
-      (new 'static 'vehicle-control-point
-        :local-pos (new 'static 'vector :w 1.0)
-        :normal (new 'static 'vector :x 1.0 :w 1.0)
-        )
-      )
+    ;; :steering-thruster-array (new 'static 'inline-array vehicle-control-point 2
+    ;;   (new 'static 'vehicle-control-point
+    ;;     :local-pos (new 'static 'vector  :w 1.0)
+    ;;     :normal (new 'static 'vector :x 1.0 :w 1.0)
+    ;;     )
+    ;;   (new 'static 'vehicle-control-point
+    ;;     :local-pos (new 'static 'vector :w 1.0)
+    ;;     :normal (new 'static 'vector :x 1.0 :w 1.0)
+    ;;     )
+    ;;   )
     :stabilizer-array (new 'static 'inline-array vehicle-control-point 6
       (new 'static 'vehicle-control-point
         :local-pos (new 'static 'vector :w 1.0)
@@ -1467,7 +1467,7 @@
   )
 
 ;; Begin Custom Level Method 
-(defmethod vehicle-method-363 ((this cara))
+(defmethod vehicle-method-363 ((this carb))
   (let ((s5-0 (-> this root root-prim)))
     (mem-copy!
       (the-as pointer (-> (the-as collide-shape-prim-group s5-0) child 0 local-sphere))
@@ -1550,7 +1550,7 @@
   )
 
 ;; Custom Level methods begin
-(defmethod vehicle-method-92 ((this cara) (arg0 vehicle-controls))
+(defmethod vehicle-method-92 ((this carb) (arg0 vehicle-controls))
   (seek! (-> this controls steering) (-> arg0 steering) (* 8.0 (seconds-per-frame)))
   (seek! (-> this controls lean-z) (-> arg0 lean-z) (* 8.0 (seconds-per-frame)))
   (let ((f0-10 (-> arg0 throttle))
@@ -1869,7 +1869,7 @@
     (vector-reset! (-> s4-0 velocity))
     (set! (-> s4-0 position quad) (-> this root trans quad))
     (quaternion-copy! (-> s4-0 rotation) (-> this root quat))
-    (let ((car (vehicle-spawn *traffic-manager* cara s4-0))) 
+    (let ((car (vehicle-spawn *traffic-manager* carb s4-0))) 
       (when car
         (set! (-> car entity) arg0)
         )
@@ -1930,7 +1930,7 @@
     )
   )
 
-  (defmethod rigid-body-object-method-46 ((this cara) (arg0 process-drawable) (arg1 int) (arg2 symbol) (arg3 event-message-block))
+  (defmethod rigid-body-object-method-46 ((this carb) (arg0 process-drawable) (arg1 int) (arg2 symbol) (arg3 event-message-block))
   (local-vars (v0-4 object))
   (case arg2
    (('ai-set-target-speed)
@@ -1967,7 +1967,7 @@
   )
   
 
-(defmethod vehicle-method-93 ((this cara))
+(defmethod vehicle-method-93 ((this carb))
   (let ((t9-0 (method-of-type vehicle vehicle-method-93)))
     (t9-0 this)
     )
@@ -2010,7 +2010,7 @@
   (none)
   )
 
-  (defmethod rigid-body-object-method-38 ((this cara))
+  (defmethod rigid-body-object-method-38 ((this carb))
   (let ((t9-0 (method-of-type vehicle rigid-body-object-method-38)))
     (t9-0 this)
     )
@@ -2069,7 +2069,7 @@
   (none)
   )
 
-(defmethod vehicle-method-360 ((this cara) (arg0 float) (arg1 vehicle-physics-work))
+(defmethod vehicle-method-360 ((this carb) (arg0 float) (arg1 vehicle-physics-work))
   (local-vars (v1-59 float) (v1-63 float))
   (rlet ((acc :class vf)
          (vf0 :class vf)
@@ -2259,7 +2259,7 @@
 
 
 ; This method is the same as apply-gravity! in Jak 3
-  (defmethod rigid-body-object-method-29 ((this cara) (arg0 float))
+  (defmethod rigid-body-object-method-29 ((this carb) (arg0 float))
   (let ((s4-0 (new 'stack-no-clear 'car-physics-work))
         (s3-0 (-> this rbody state))
         )
@@ -2271,7 +2271,7 @@
     (displacement-between-two-points-normalized! (-> this path) (-> s1-0 rvec) (-> s1-0 fvec x))
     (get-point-in-path! (-> this path) (-> s1-0 uvec) (-> s1-0 fvec x) 'interp)
     (set! (-> this path-pos quad) (-> s1-0 uvec quad))
-    (vector-float*! (-> this path-dir) (-> s1-0 rvec) 1.0)
+    (vector-float*! (-> this path-dir) (-> s1-0 rvec) -1.0)
     )
     0
     )
@@ -2400,7 +2400,7 @@
   (none)
   )
 
-  (defmethod rigid-body-object-method-52 ((this cara))
+  (defmethod rigid-body-object-method-52 ((this carb))
   (local-vars (v1-10 float))
   (rlet ((acc :class vf)
          (vf0 :class vf)

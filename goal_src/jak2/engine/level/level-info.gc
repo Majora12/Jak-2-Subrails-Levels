@@ -15820,12 +15820,13 @@
     :taskname 'default
     :packages '()
     ;; :memory-mode (load-buffer-mode small-center)
-    :music-bank #f
+    :music-bank 'tomb
     :ambient-sounds '()
-    :mood-func 'update-mood-default
+    :sound-reverb 0.2
+    :mood-func 'update-mood-tomba
     :mood-init #f
     :ocean #f
-    :sky #t
+    :sky #f
     :use-camera-other #f
     :part-engine-max 16
     :continues '((new 'static 'continue-point
@@ -15853,8 +15854,9 @@
         (new 'static 'continue-point
         :name "Rail-Warp"
          :level 'first-level
-        :trans (new 'static 'vector :x (meters 2367.62 ) :y (meters 825.307) :z (meters -2569.64) :w 1.0)
-        :quat (new 'static 'vector :y -0.6903 :w -0.7235)
+         :flags (continue-flags warp-gate)
+        :trans (new 'static 'vector :x (meters 2374.62 ) :y (meters 73.341) :z (meters -2453.5) :w 1.0)
+        :quat (new 'static 'vector :y -0.6903 :w -0.7235) 
         :camera-trans (new 'static 'vector :x 0.0 :y (meters 1) :z 0.0 :w 1.0)
         :camera-rot (new 'static 'inline-array vector3s 3
           (new 'static 'vector3s :data (new 'static 'array float 3 1.0 0.0 0.0))
@@ -15917,68 +15919,47 @@
   (cons! *level-load-list* 'first-level)
   )
 
-  (define first-level-part2
+  (define p-temple-1
   (new 'static 'level-load-info
     :index #x9e
-    :name 'first-level-part2
-    :visname 'first-level-part2-vis
-    :nickname 'fl2
-    :dbname 'first-level-part2
+    :name 'p-temple-1 
+    :visname 'p-temple-1-vis
+    :nickname 'pt1
+    :dbname 'p-temple-1
     :taskname 'default
     :packages '()
-    ;; :memory-mode (load-buffer-mode small-center)
-    :music-bank #f
+    :memory-mode (load-buffer-mode large)
+    :music-bank 'tomb
     :ambient-sounds '()
-    :mood-func 'update-mood-default
+    :sound-reverb 0.2
+    :mood-func 'update-mood-tomba
     :mood-init #f
     :ocean #f
     :sky #t
     :use-camera-other #f
     :part-engine-max 16
     :continues '((new 'static 'continue-point
-        :name "first-level-part2-start"
-        :level 'first-level-2
-        :trans (new 'static 'vector :x (meters 6843.0) :y (meters 3980.5) :z (meters -3034.9) :w 1.0)
+        :name "p-temple-1-start"
+        :level 'p-temple-1
+        :trans (new 'static 'vector :x (meters 2886.5737) :y (meters 236.5828) :z (meters -2428.5073) :w 1.0)
         :quat (new 'static 'vector :y 0.061 :w 0.9981)
         :camera-trans (new 'static 'vector :x 0.0 :y (meters 1) :z 0.0 :w 1.0)
         :camera-rot (new 'static 'inline-array vector3s 3
-          (new 'static 'vector3s :data (new 'static 'array float 3 1.0 0.0 0.0))
-          (new 'static 'vector3s :data (new 'static 'array float 3 0.0 1.0 0.0))
-          (new 'static 'vector3s :data (new 'static 'array float 3 0.0 0.0 1.0))
+          (new 'static 'vector3s :data (new 'static 'array float 3 0.0046 0.0 0.0))
+          (new 'static 'vector3s :data (new 'static 'array float 3 0.0 0.9844 0.0))
+          (new 'static 'vector3s :data (new 'static 'array float 3 0.0 0.0 -0.1735))
           )
         :on-goto #f
         :vis-nick #f
         :want (new 'static 'inline-array level-buffer-state 6
-          (new 'static 'level-buffer-state :name 'ctywide :display? 'display :force-vis? #f :force-inside? #f)
-          (new 'static 'level-buffer-state :name 'first-level :display? 'display :force-vis? #f :force-inside? #f)
-          (new 'static 'level-buffer-state :name 'ctyindb :display? 'display :force-vis? #f :force-inside? #f)
+          (new 'static 'level-buffer-state :name #f :display? #f :force-vis? #f :force-inside? #f)
+          (new 'static 'level-buffer-state :name 'p-temple-1 :display? 'display :force-vis? #f :force-inside? #f)
+          (new 'static 'level-buffer-state :name #f :display? #f :force-vis? #f :force-inside? #f)
           (new 'static 'level-buffer-state :name #f :display? #f :force-vis? #f :force-inside? #f)
           (new 'static 'level-buffer-state :name #f :display? #f :force-vis? #f :force-inside? #f)
           (new 'static 'level-buffer-state :name #f :display? #f :force-vis? #f :force-inside? #f))
-        :want-sound (new 'static 'array symbol 3 #f #f #f)
+        :want-sound (new 'static 'array symbol 3 'tomb1 'tomb2 'tomb3)
         )
-        ;; (new 'static 'continue-point
-        ;; :name "first-level-end"
-        ;; :level 'first-level
-        ;; :trans (new 'static 'vector :x (meters 2343.1) :y (meters 308.78) :z (meters -4829.14) :w 1.0)
-        ;; :quat (new 'static 'vector :y 0.061 :w 0.9981)
-        ;; :camera-trans (new 'static 'vector :x 0.0 :y (meters 1) :z 0.0 :w 1.0)
-        ;; :camera-rot (new 'static 'inline-array vector3s 3
-        ;;   (new 'static 'vector3s :data (new 'static 'array float 3 1.0 0.0 0.0))
-        ;;   (new 'static 'vector3s :data (new 'static 'array float 3 0.0 1.0 0.0))
-        ;;   (new 'static 'vector3s :data (new 'static 'array float 3 0.0 0.0 1.0))
-        ;;   )
-        ;; :on-goto #f
-        ;; :vis-nick #f
-        ;; :want (new 'static 'inline-array level-buffer-state 6
-        ;;   (new 'static 'level-buffer-state :name 'ctywide :display? 'display :force-vis? #f :force-inside? #f)
-        ;;   (new 'static 'level-buffer-state :name 'first-level :display? 'display :force-vis? #f :force-inside? #f)
-        ;;   (new 'static 'level-buffer-state :name 'ctyindb :display? 'display :force-vis? #f :force-inside? #f)
-        ;;   (new 'static 'level-buffer-state :name #f :display? #f :force-vis? #f :force-inside? #f)
-        ;;   (new 'static 'level-buffer-state :name #f :display? #f :force-vis? #f :force-inside? #f)
-        ;;   (new 'static 'level-buffer-state :name #f :display? #f :force-vis? #f :force-inside? #f))
-        ;; :want-sound (new 'static 'array symbol 3 #f #f #f)
-        ;; )
       )
     :tasks '()
     :priority 100
@@ -16019,5 +16000,5 @@
   )
 
 (#when PC_PORT
-  (cons! *level-load-list* 'first-level-part2)
+  (cons! *level-load-list* 'p-temple-1)
   )
