@@ -10,7 +10,7 @@
 
 ;; failed to figure out what this is:
 (defpart 2474
-  :init-specs ((:texture (new 'static 'texture-id :index #x92 :page #xc))
+  :init-specs ((:texture (motion-blur-part effects))
     (:num 1.0 6.0)
     (:x (meters -4) (meters 8))
     (:scale-x (meters 1))
@@ -889,10 +889,7 @@
     )
   :code (behavior ()
     (logclear! (-> self flags) (robotank-flags roflags-2))
-    (let ((gp-0 (current-time)))
-      (until (time-elapsed? gp-0 (seconds 0.1))
-        (suspend)
-        )
+    (suspend-for (seconds 0.1)
       )
     (logior! (-> self flags) (robotank-flags roflags-2))
     (sleep-code)
@@ -1023,10 +1020,7 @@
     (remove-setting! 'process-mask)
     (remove-setting! 'target-height)
     (send-event (handle->process (-> self turret)) 'die)
-    (let ((gp-0 (current-time)))
-      (until (time-elapsed? gp-0 (seconds 2))
-        (suspend)
-        )
+    (suspend-for (seconds 2)
       )
     (while (-> self child)
       (suspend)
